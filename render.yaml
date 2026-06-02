@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: hr-partner
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SERPAPI_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SENDGRID_API_KEY
+        sync: false
+      - key: EMAIL_TO
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: RUN_TOKEN
+        sync: false
+      - key: DATABASE_PATH
+        value: /data/jobs.db
+      - key: RESUME_PATH
+        value: /data/resume.md
+      - key: MIN_SCORE
+        value: "60"
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1

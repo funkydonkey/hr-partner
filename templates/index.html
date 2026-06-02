@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — HR Partner{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+  <div>
+    <h1>Job Dashboard</h1>
+    <p class="muted">Latest {{ jobs|length }} positions found by the agent</p>
+  </div>
+  <form method="post" action="/run" id="runForm">
+    <input type="hidden" name="_token" value="">
+    <button type="button" class="btn btn-primary" onclick="triggerRun()">▶ Run Now</button>
+  </form>
+</div>
+
+{% if not jobs %}
+<div class="card" style="text-align:center;padding:48px;color:#6b7280;">
+  <p style="font-size:32px;margin:0;">🔍</p>
+  <p style="margin:8px 0 0;">No jobs found yet. Click <strong>Run Now</strong> to start the search.</p>
+</div>
+{% else %}
+<div class="card" style="padding:0;overflow:hidden;">
+  <table>
+    <thead>
+      <tr>
+        <th>Position</th>
+        <th>Score</th>
+        <th>Reason</th>
+        <th>Source</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in jobs %}
+      <tr>
+        <td>
+          <a href="{{ job.url }}" target="_blank" rel="noopener"
+             style="font-weight:600;color:#1e3a5f;text-decoration:none;">{{ job.title }}</a><br>
+          <span class="muted">{{ job.company }}{% if job.location %} · {{ job.location }}{% endif %}</span><br>
+          <span class="muted" style="font-size:12px;">{{ job.found_at[:10] }}</span>
+        </td>
+        <td class="score-cell">
+          {% if job.score >= 85 %}
+            <span class="badge badge-green">{{ job.score }}</span>
+          {% elif job.score >= 60 %}
+            <span class="badge badge-yellow">{{ job.score }}</span>
+          {% else %}
+            <span class="badge badge-gray">{{ job.score }}</span>
+          {% endif %}
+        </td>
+        <td style="max-width:280px;color:#374151;">{{ job.score_reason }}</td>
+        <td class="muted">{{ job.source }}</td>
+        <td style="text-align:right;white-space:nowrap;">
+          <a href="{{ job.url }}" target="_blank" class="btn btn-secondary btn-sm">View</a>
+          <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
+            <button type="submit" class="btn btn-green btn-sm">✦ Resume</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<script>
+async function triggerRun() {
+  const token = prompt("Enter run token:");
+  if (!token) return;
+  const btn = document.querySelector('[onclick="triggerRun()"]');
+  btn.disabled = true;
+  btn.textContent = "Running…";
+  try {
+    const res = await fetch("/run", {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + token }
+    });
+    const data = await res.json();
+    if (res.ok) {
+      alert(`Done! New jobs: ${data.new_jobs}, sent: ${data.sent}`);
+      location.reload();
+    } else {
+      alert("Error: " + (data.detail || JSON.stringify(data)));
+    }
+  } catch(e) {
+    alert("Request failed: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "▶ Run Now";
+  }
+}
+</script>
+{% endblock %}

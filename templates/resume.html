@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Adapted Resume — HR Partner{% endblock %}
+{% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+  <div>
+    <h1>Adapted Resume</h1>
+    <p class="muted">{{ job.title }} · {{ job.company }}</p>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="{{ job.url }}" target="_blank" class="btn btn-secondary">View Job</a>
+    <a href="/" class="btn btn-secondary">← Dashboard</a>
+  </div>
+</div>
+
+{% if not resume_md %}
+<div class="card" style="text-align:center;padding:48px;color:#6b7280;">
+  <p>Resume is being generated… Please refresh in a moment.</p>
+  <a href="/jobs/{{ job.job_id }}/resume" class="btn btn-primary" style="margin-top:12px;">Refresh</a>
+</div>
+{% else %}
+<div class="card" style="position:relative;">
+  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;">
+    <button onclick="copyResume()" class="btn btn-secondary btn-sm">📋 Copy Markdown</button>
+    <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
+      <button type="submit" class="btn btn-green btn-sm">↻ Regenerate</button>
+    </form>
+  </div>
+
+  <!-- Rendered preview -->
+  <div id="resumePreview" style="display:none;">
+    <!-- markdown rendered here via JS -->
+  </div>
+
+  <!-- Raw markdown in textarea -->
+  <textarea id="resumeRaw" rows="40"
+    style="font-family:'Courier New',monospace;font-size:13px;line-height:1.6;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:16px;resize:vertical;">{{ resume_md }}</textarea>
+
+  <p style="margin-top:8px;font-size:12px;color:#9ca3af;">
+    Markdown format — paste directly into Google Docs, Notion, or any Markdown editor.
+  </p>
+</div>
+{% endif %}
+
+<script>
+function copyResume() {
+  const ta = document.getElementById("resumeRaw");
+  navigator.clipboard.writeText(ta.value).then(() => {
+    const btn = event.target;
+    btn.textContent = "✓ Copied!";
+    setTimeout(() => btn.textContent = "📋 Copy Markdown", 2000);
+  });
+}
+</script>
+{% endblock %}

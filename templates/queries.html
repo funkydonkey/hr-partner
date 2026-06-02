@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Search Queries — HR Partner{% endblock %}
+{% block content %}
+
+<h1>Search Queries</h1>
+<p class="muted" style="margin-bottom:20px;">These queries are sent to Google Jobs via SerpAPI each morning at 08:00 CET.</p>
+
+{% if saved %}
+<div class="alert-success">Changes saved successfully.</div>
+{% endif %}
+
+<!-- Add new query -->
+<div class="card">
+  <h2>Add Query</h2>
+  <form method="post" action="/queries/add" style="display:flex;gap:10px;">
+    <input type="text" name="query" placeholder="e.g. OneStream Lead Architect remote" required style="flex:1;">
+    <button type="submit" class="btn btn-primary">Add</button>
+  </form>
+</div>
+
+<!-- Existing queries -->
+<div class="card" style="padding:0;overflow:hidden;">
+  {% if not queries %}
+  <div style="padding:32px;text-align:center;color:#6b7280;">No queries yet.</div>
+  {% else %}
+  <table>
+    <thead>
+      <tr>
+        <th>Query</th>
+        <th style="text-align:center;">Active</th>
+        <th style="text-align:right;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for q in queries %}
+      <tr id="row-{{ q.id }}">
+        <td>
+          <form method="post" action="/queries/{{ q.id }}/update" id="form-{{ q.id }}"
+                style="display:flex;align-items:center;gap:10px;">
+            <input type="text" name="query" value="{{ q.query }}" style="flex:1;min-width:280px;">
+            <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;white-space:nowrap;">
+              <input type="checkbox" name="active" value="on" {% if q.active %}checked{% endif %}
+                     style="width:16px;height:16px;cursor:pointer;">
+              Active
+            </label>
+          </form>
+        </td>
+        <td style="text-align:center;">
+          {% if q.active %}
+            <span class="badge badge-green">On</span>
+          {% else %}
+            <span class="badge badge-gray">Off</span>
+          {% endif %}
+        </td>
+        <td style="text-align:right;white-space:nowrap;">
+          <button type="submit" form="form-{{ q.id }}" class="btn btn-secondary btn-sm">Save</button>
+          <form method="post" action="/queries/{{ q.id }}/delete" style="display:inline;"
+                onsubmit="return confirm('Delete this query?')">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</div>
+{% endblock %}
