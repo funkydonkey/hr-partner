@@ -22,6 +22,7 @@
 <div class="card" style="position:relative;">
   <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;">
     <button onclick="copyResume()" class="btn btn-secondary btn-sm">📋 Copy Markdown</button>
+    <a href="/jobs/{{ job.job_id }}/resume/download" class="btn btn-primary btn-sm">⬇ Download DOCX</a>
     <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
       <button type="submit" class="btn btn-green btn-sm">↻ Regenerate</button>
     </form>

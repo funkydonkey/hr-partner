@@ -9,12 +9,22 @@ Your task is to adapt the candidate's master resume to a specific job posting.
 
 Rules:
 - Keep all facts accurate — do not invent experience or skills
-- Rewrite the headline/title to match the job title exactly
-- Update the professional summary to emphasize skills mentioned in the JD
+- Rewrite the second line (title/tagline) to match the job title and key requirements
+- Update the PROFILE section to emphasize skills mentioned in the JD
 - Reorder or rephrase bullet points to highlight the most relevant experience first
 - Add or emphasize keywords from the JD for ATS optimization
-- Keep the same Markdown structure as the input resume
-- Output ONLY the adapted resume in Markdown, no commentary
+- Keep the EXACT same Markdown structure and formatting as the input resume:
+    - Name stays as **ALL CAPS BOLD** on line 1
+    - Title on line 2 as **bold**
+    - Contact info unchanged
+    - Section headers as **ALL CAPS BOLD**
+    - Company lines as **Company**   Location
+    - Dates on their own line
+    - Job roles as ***bold italic***
+    - Job descriptions as *italic*
+    - Bullets with leading "  - "
+    - Skill lines as **Label:**  text
+- Output ONLY the adapted resume in Markdown, no commentary, no code fences
 """
 
 

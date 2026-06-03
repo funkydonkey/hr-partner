@@ -1,12 +1,14 @@
 import asyncio
 import os
+import re
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, Form, HTTPException, Header
-from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse, Response
 from fastapi.templating import Jinja2Templates
 from typing import Optional, Annotated
 
 from app import storage, pipeline, resume as resume_module
+from app.docx_builder import build_docx
 from app.scheduler import create_scheduler
 from app.config import settings
 
@@ -116,6 +118,28 @@ async def view_resume(request: Request, job_id: str):
     adapted = await storage.get_adapted_resume(job_id)
     return templates.TemplateResponse(
         "resume.html", {"request": request, "job": job, "resume_md": adapted}
+    )
+
+
+@app.get("/jobs/{job_id}/resume/download")
+async def download_resume_docx(job_id: str):
+    job = await storage.get_job_by_id(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    adapted = await storage.get_adapted_resume(job_id)
+    if not adapted:
+        raise HTTPException(status_code=404, detail="Resume not generated yet")
+
+    loop = asyncio.get_event_loop()
+    docx_bytes = await loop.run_in_executor(None, build_docx, adapted)
+
+    company_slug = re.sub(r'[^a-z0-9]+', '_', job.get('company', 'company').lower()).strip('_')
+    filename = f"resume_{company_slug}.docx"
+
+    return Response(
+        content=docx_bytes,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 

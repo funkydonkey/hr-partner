@@ -1,66 +1,68 @@
-# Your Name
-**Lead OneStream Architect | EPM Consultant**
+**ANDREY MOLCHANSKY**
 
-📧 your.email@example.com | 🌍 Remote | 🔗 linkedin.com/in/yourprofile
+**OneStream Architect  | OCP Certified |  CPM Platform & Team Leadership**
 
----
+[funkydonkey.github.io](http://funkydonkey.github.io)   •   +49 176 648-121-94   •   <a.molchansky@gmail.com>   •   [linkedin.com/in/amolchansky](https://www.linkedin.com/in/amolchansky/)
 
-## Professional Summary
+Berlin, Germany | *Authorized to work in Germany*
 
-Experienced EPM/OneStream architect with 10+ years delivering financial consolidation and planning solutions. Proven track record leading end-to-end OneStream XF implementations across global enterprises. Deep expertise in financial close, reporting, and budgeting process design. Passionate about turning complex financial requirements into elegant, scalable EPM solutions.
+**PROFILE**
 
----
+OneStream architect with end-to-end ownership of a 340-entity Group consolidation and reporting platform serving 600+ users. Bridge between Finance and IT — translate business needs into OneStream blueprints and solution design. Early adopter of AI in finance — deployed an AI-powered support bot and developed AI-powered internal tools.
 
-## Core Skills
+**PROFESSIONAL EXPERIENCE**
 
-- **OneStream XF**: Implementation, Architecture, Business Rules (VB.NET), Cube Views, Dashboards, Workflows
-- **EPM Platforms**: Oracle HFM, Oracle Planning, SAP BPC, Anaplan, Adaptive Insights
-- **Financial Processes**: Consolidation, Close & Reporting, Budgeting, Forecasting
-- **Integration**: ETL design, Data mapping, FDMEE, OneStream Data Management
-- **Leadership**: Solution architecture, pre-sales, team leadership, stakeholder management
-- **Compliance**: IFRS, GAAP, multi-entity, multi-currency consolidations
+**Delivery Hero SE**   Berlin, Germany
+**Nov 2023 – Present**
 
----
+***OneStream Architect***
 
-## Experience
+*Global food delivery group; OneStream runs Group financial consolidation and management reporting for 340 legal entities and 600+ users.*
 
-### Lead OneStream Architect
-**Company Name** | Remote | 2021 – Present
+  - Led the end-to-end migration from LucaNet to OneStream as solution architect — reconsolidated 24 periods of historical P&L, Balance Sheet, and Cash Flow data for 340 subsidiaries in four months across three parallel workstreams (Actuals, Planning, Statistical).
+  - Designed and built the core management reporting and planning layer end-to-end — P&L and FCF dashboards for Monthly performance tracking, budgeting and forecasting templates, ratios and reporting calculations.
+  - Owned 3 of the Finance team's 9 OKRs as technical lead, delivering the Scorecard project — automated trial-balance screening, data validation, and timeliness scoring across all 340 entities — with no external consultant support.
+  - Led a cross-team, zero-downtime OneStream version upgrade across five integrated systems (SAP, Microsoft Dynamics, BigQuery, Anaplan, Amana) through critical month-end close and forecasting cycles.
+  - Established platform governance and operating model — prioritization framework, structured Jira workflow, and audit-compliant change-management portal — moving the team from reactive ad-hoc work to resource-planned delivery.
+  - Bridge between Finance and IT — partnered with 20+ stakeholders across Group Accounting and Controlling to translate business needs into technical solutions, ran user training, mentored team members, and built an AI-powered support bot for the 600+ users.
 
-- Designed and led implementation of OneStream XF platform for Fortune 500 client, replacing legacy HFM
-- Developed complex Business Rules (VB.NET) for automated eliminations and currency translations
-- Architected multi-entity consolidation structure supporting 200+ legal entities across 40 countries
-- Led team of 5 consultants; delivered project on time and 10% under budget
+**Orlov.Finance**   Remote / Hybrid
+**Mar 2021 – Oct 2023**
 
-### Senior EPM Consultant
-**Previous Company** | City, Country | 2017 – 2021
+***Senior Financial Consultant***
 
-- Delivered 8 full-cycle OneStream implementations across manufacturing and financial services sectors
-- Designed Cube Views and dashboards for C-suite financial reporting
-- Migrated 3 clients from Oracle HFM to OneStream XF
-- Provided pre-sales support and solution design for RFP responses
+*Financial consulting bureau bringing high-quality financial expertise to start-ups.*
 
-### EPM Developer
-**Earlier Company** | City, Country | 2014 – 2017
+  - Led financial reporting framework builds at multiple start-ups from scratch, including ERP implementations, and eliminated client cash gaps through robust cash-planning processes.
+  - Helped a B2B SaaS founder reach break-even in 13 months with a unit-economics model built from scratch, and cut monthly reporting cycle time by ~20 days through automation.
 
-- Developed and maintained Oracle Hyperion Planning and HFM applications
-- Implemented FDMEE integrations from ERP systems (SAP, Oracle EBS)
-- Supported financial close processes for 50+ entity consolidations
+**Sevkabel Holding**   St. Petersburg, Russia
+**Feb 2019 – Mar 2021**
 
----
+***FP&A Analyst***
 
-## Education
+*Largest Russian cable manufacturer with a real estate development division.*
 
-**Bachelor of Science in Finance / Computer Science**
-University Name | Year
+  - Cut the managerial reporting cycle from one month to 10 days and built financial models that helped secure more than €50M in investment for real estate renovation projects.
 
----
+**CORE SKILLS**
 
-## Certifications
+**CPM:**  OneStream (Cube Views, Dashboards, Workflows, Business Rules / VB.NET, Member Formulas, Data Management, Transformation Rules), LucaNet, Anaplan, Power BI
 
-- OneStream XF Certified Implementation Specialist
-- Oracle Certified Professional (Hyperion)
+**Technical:**  SQL, VBA, Python, Advanced Excel, Google BigQuery, Jira (Admin), systems integrations
 
----
+**AI / Automation:**  OpenAI Agents SDK, Autogen, Claude Code, Gemini CLI; AI agent design, LLM-powered internal tooling, workflow automation
 
-*This is a placeholder resume. Replace this content with your actual resume.*
+**Finance:**  IFRS and Management reporting, Group consolidation, FP&A (planning, budgeting, forecasting).
+
+**Leadership & Architecture:**  End-to-end OneStream platform ownership, solution architecture, EPM transformation design, audit-compliant governance, team & stakeholder management, user training
+
+**Languages:**  English (fluent), Russian (native), German (B1)
+
+**CERTIFICATIONS & EDUCATION**
+
+  - OneStream Certified Professional — Core Platform Architect, OneStream Software (2026).
+  - OneStream Essentials — six certified modules: Implementing OneStream, Building Dashboards, Writing Financial Calculations, Administration, Building Basic Reports, and Getting Started (2024–2025).
+  - AI Certifications — Claude Code in Action and AI Fluency Framework & Foundations, Anthropic (2026).
+  - ACCA Qualification — in progress.
+  - Financial Management at CFO Level — Eduson Academy (2022); Specialist Degree in Psychology — SPbSU (2008–2013).
