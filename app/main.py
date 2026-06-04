@@ -143,6 +143,29 @@ async def download_resume_docx(job_id: str):
     )
 
 
+# --- Performance Review file management ---
+
+@app.get("/perf-review/edit", response_class=HTMLResponse)
+async def edit_perf_review_page(request: Request):
+    path = settings.perf_review_path
+    if not os.path.exists(path):
+        repo_path = os.path.join(BASE_DIR, "data", "perf_review.md")
+        content = open(repo_path).read() if os.path.exists(repo_path) else ""
+    else:
+        content = open(path).read()
+    return templates.TemplateResponse(
+        "perf_review_edit.html", {"request": request, "content": content}
+    )
+
+
+@app.post("/perf-review/edit")
+async def save_perf_review(content: Annotated[str, Form()]):
+    os.makedirs(os.path.dirname(settings.perf_review_path), exist_ok=True)
+    with open(settings.perf_review_path, "w") as f:
+        f.write(content)
+    return RedirectResponse("/perf-review/edit?saved=1", status_code=303)
+
+
 # --- Resume file management ---
 
 @app.get("/resume/edit", response_class=HTMLResponse)

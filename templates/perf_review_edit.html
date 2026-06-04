@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Performance Review — HR Partner{% endblock %}
+{% block content %}
+
+<header class="mb-10 border-b border-outline-variant/30 pb-6">
+  <h1 class="font-display font-black text-4xl text-on-surface tracking-tight mb-2 flex items-center gap-3">
+    <span class="material-symbols-outlined text-secondary text-4xl neon-text-secondary" style="font-variation-settings:'FILL' 1;">emoji_events</span>
+    Performance Review
+  </h1>
+  <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+    Achievement bullets used to enhance adapted resumes
+  </p>
+</header>
+
+{% if request.query_params.get('saved') %}
+<div class="mb-6 flex items-center gap-2 bg-secondary/10 border border-secondary/30 text-secondary font-label text-sm uppercase tracking-widest px-4 py-3 rounded">
+  <span class="material-symbols-outlined text-[18px]">check_circle</span> Saved
+</div>
+{% endif %}
+
+<div class="glass-card rounded-xl p-6 mb-4">
+  <form method="post" action="/perf-review/edit">
+    <textarea name="content" rows="40"
+      style="font-family:'Space Grotesk',monospace;font-size:13px;line-height:1.6;resize:vertical;min-height:500px;margin-bottom:16px;"
+      placeholder="Paste your end-of-year performance review here in Markdown or plain text.
+
+Example format:
+
+## 2024 Achievements
+
+- Led OneStream consolidation implementation for 45-entity client, delivered 3 weeks ahead of schedule
+- Designed custom VB.NET business rules reducing close cycle from 8 to 3 days
+- Architected multi-currency consolidation for EMEA region covering 12 currencies
+...">{{ content }}</textarea>
+    <div class="flex justify-end">
+      <button type="submit"
+        class="flex items-center gap-2 bg-surface text-primary font-headline font-bold uppercase tracking-wider text-sm px-6 py-3 rounded border border-primary/50 neon-button">
+        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings:'FILL' 1;">save</span>
+        Save
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="px-2">
+  <p class="font-label text-xs text-on-surface-variant">
+    Markdown or plain text. When generating an adapted resume, Claude will pick the most relevant achievement bullets from here and inject them into the most recent job position.
+  </p>
+</div>
+{% endblock %}

@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     run_token: str = "dev-token"
     database_path: str = "/data/jobs.db"
     resume_path: str = "/data/resume.md"
+    perf_review_path: str = "/data/perf_review.md"
     min_score: int = 60
 
 
