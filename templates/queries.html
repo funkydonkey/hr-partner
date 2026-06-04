@@ -2,67 +2,75 @@
 {% block title %}Search Queries — HR Partner{% endblock %}
 {% block content %}
 
-<h1>Search Queries</h1>
-<p class="muted" style="margin-bottom:20px;">These queries are sent to Google Jobs via SerpAPI each morning at 08:00 CET.</p>
+<header class="mb-10 border-b border-outline-variant/30 pb-6">
+  <h1 class="font-display font-black text-4xl text-on-surface tracking-tight mb-2 flex items-center gap-3">
+    <span class="material-symbols-outlined text-secondary text-4xl neon-text-secondary" style="font-variation-settings:'FILL' 1;">manage_search</span>
+    Search Queries
+  </h1>
+  <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest flex items-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+    Sent to Google Jobs via SerpAPI daily at 08:00 CET
+  </p>
+</header>
 
 {% if saved %}
-<div class="alert-success">Changes saved successfully.</div>
+<div class="mb-6 flex items-center gap-2 bg-secondary/10 border border-secondary/30 text-secondary font-label text-sm uppercase tracking-widest px-4 py-3 rounded">
+  <span class="material-symbols-outlined text-[18px]">check_circle</span> Changes saved
+</div>
 {% endif %}
 
-<!-- Add new query -->
-<div class="card">
-  <h2>Add Query</h2>
-  <form method="post" action="/queries/add" style="display:flex;gap:10px;">
-    <input type="text" name="query" placeholder="e.g. OneStream Lead Architect remote" required style="flex:1;">
-    <button type="submit" class="btn btn-primary">Add</button>
+<!-- Add query -->
+<div class="glass-card rounded-xl p-6 mb-6">
+  <h2 class="font-headline font-bold text-lg text-on-surface mb-4 flex items-center gap-2">
+    <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
+    Add Query
+  </h2>
+  <form method="post" action="/queries/add" class="flex gap-3">
+    <input type="text" name="query" placeholder="e.g. OneStream Lead Architect remote" required class="flex-1">
+    <button type="submit" class="flex items-center gap-2 bg-surface text-primary font-headline font-bold uppercase tracking-wider text-sm px-6 py-2 rounded border border-primary/50 neon-button shrink-0">
+      <span class="material-symbols-outlined text-[18px]">add</span> Add
+    </button>
   </form>
 </div>
 
 <!-- Existing queries -->
-<div class="card" style="padding:0;overflow:hidden;">
+<div class="glass-card rounded-xl overflow-hidden">
   {% if not queries %}
-  <div style="padding:32px;text-align:center;color:#6b7280;">No queries yet.</div>
+  <div class="p-16 text-center">
+    <span class="material-symbols-outlined text-5xl text-on-surface-variant block mb-3">search_off</span>
+    <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest">No queries yet.</p>
+  </div>
   {% else %}
-  <table>
-    <thead>
-      <tr>
-        <th>Query</th>
-        <th style="text-align:center;">Active</th>
-        <th style="text-align:right;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for q in queries %}
-      <tr id="row-{{ q.id }}">
-        <td>
-          <form method="post" action="/queries/{{ q.id }}/update" id="form-{{ q.id }}"
-                style="display:flex;align-items:center;gap:10px;">
-            <input type="text" name="query" value="{{ q.query }}" style="flex:1;min-width:280px;">
-            <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;white-space:nowrap;">
-              <input type="checkbox" name="active" value="on" {% if q.active %}checked{% endif %}
-                     style="width:16px;height:16px;cursor:pointer;">
-              Active
-            </label>
-          </form>
-        </td>
-        <td style="text-align:center;">
-          {% if q.active %}
-            <span class="badge badge-green">On</span>
-          {% else %}
-            <span class="badge badge-gray">Off</span>
-          {% endif %}
-        </td>
-        <td style="text-align:right;white-space:nowrap;">
-          <button type="submit" form="form-{{ q.id }}" class="btn btn-secondary btn-sm">Save</button>
-          <form method="post" action="/queries/{{ q.id }}/delete" style="display:inline;"
-                onsubmit="return confirm('Delete this query?')">
-            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="divide-y divide-outline-variant/30">
+    {% for q in queries %}
+    <div class="p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+      <form method="post" action="/queries/{{ q.id }}/update" id="form-{{ q.id }}" class="flex flex-1 items-center gap-3">
+        <input type="text" name="query" value="{{ q.query }}" class="flex-1">
+        <label class="flex items-center gap-2 font-label text-sm text-on-surface-variant cursor-pointer shrink-0">
+          <input type="checkbox" name="active" value="on" {% if q.active %}checked{% endif %}>
+          <span>Active</span>
+        </label>
+      </form>
+      <div class="flex items-center gap-3 shrink-0">
+        {% if q.active %}
+          <span class="font-label text-xs uppercase tracking-wider text-secondary border border-secondary/40 px-2 py-0.5 rounded">On</span>
+        {% else %}
+          <span class="font-label text-xs uppercase tracking-wider text-on-surface-variant border border-outline-variant/50 px-2 py-0.5 rounded">Off</span>
+        {% endif %}
+        <button type="submit" form="form-{{ q.id }}"
+          class="text-on-surface hover:text-secondary font-label text-xs uppercase tracking-wide transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">save</span> Save
+        </button>
+        <form method="post" action="/queries/{{ q.id }}/delete" style="display:inline;"
+              onsubmit="return confirm('Delete this query?')">
+          <button type="submit" class="text-error hover:text-red-400 font-label text-xs uppercase tracking-wide transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">delete</span> Delete
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   {% endif %}
 </div>
 {% endblock %}

@@ -2,64 +2,84 @@
 {% block title %}Dashboard — HR Partner{% endblock %}
 {% block content %}
 
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+<!-- Header -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 border-b border-outline-variant/30 pb-6">
   <div>
-    <h1>Job Dashboard</h1>
-    <p class="muted">Latest {{ jobs|length }} positions found by the agent</p>
+    <h1 class="font-display font-black text-4xl text-on-surface tracking-tight mb-2 flex items-center gap-3">
+      <span class="material-symbols-outlined text-secondary text-4xl neon-text-secondary" style="font-variation-settings:'FILL' 1;">dashboard</span>
+      Job Dashboard
+    </h1>
+    <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+      Latest {{ jobs|length }} positions found by the agent
+    </p>
   </div>
-  <form method="post" action="/run" id="runForm">
-    <input type="hidden" name="_token" value="">
-    <button type="button" class="btn btn-primary" onclick="triggerRun()">▶ Run Now</button>
-  </form>
-</div>
+  <button onclick="triggerRun()" class="mt-6 md:mt-0 flex items-center gap-2 bg-surface text-primary font-headline font-bold uppercase tracking-wider text-sm px-6 py-3 rounded border border-primary/50 neon-button group" id="runBtn">
+    <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">play_circle</span>
+    Run Now
+  </button>
+</header>
 
 {% if not jobs %}
-<div class="card" style="text-align:center;padding:48px;color:#6b7280;">
-  <p style="font-size:32px;margin:0;">🔍</p>
-  <p style="margin:8px 0 0;">No jobs found yet. Click <strong>Run Now</strong> to start the search.</p>
+<div class="glass-card rounded-xl p-16 text-center">
+  <span class="material-symbols-outlined text-6xl text-on-surface-variant mb-4 block">search</span>
+  <p class="text-on-surface-variant font-label uppercase tracking-widest text-sm">No jobs yet. Click <span class="text-primary">Run Now</span> to start the search.</p>
 </div>
 {% else %}
-<div class="card" style="padding:0;overflow:hidden;">
-  <table>
-    <thead>
-      <tr>
-        <th>Position</th>
-        <th>Score</th>
-        <th>Reason</th>
-        <th>Source</th>
-        <th style="text-align:right;">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for job in jobs %}
-      <tr>
-        <td>
-          <a href="{{ job.url }}" target="_blank" rel="noopener"
-             style="font-weight:600;color:#1e3a5f;text-decoration:none;">{{ job.title }}</a><br>
-          <span class="muted">{{ job.company }}{% if job.location %} · {{ job.location }}{% endif %}</span><br>
-          <span class="muted" style="font-size:12px;">{{ job.found_at[:10] }}</span>
-        </td>
-        <td class="score-cell">
-          {% if job.score >= 85 %}
-            <span class="badge badge-green">{{ job.score }}</span>
-          {% elif job.score >= 60 %}
-            <span class="badge badge-yellow">{{ job.score }}</span>
-          {% else %}
-            <span class="badge badge-gray">{{ job.score }}</span>
-          {% endif %}
-        </td>
-        <td style="max-width:280px;color:#374151;">{{ job.score_reason }}</td>
-        <td class="muted">{{ job.source }}</td>
-        <td style="text-align:right;white-space:nowrap;">
-          <a href="{{ job.url }}" target="_blank" class="btn btn-secondary btn-sm">View</a>
-          <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
-            <button type="submit" class="btn btn-green btn-sm">✦ Resume</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  {% for job in jobs %}
+  <article class="glass-card rounded-xl p-6 flex flex-col h-full relative overflow-hidden group">
+    <div class="absolute top-0 right-0 w-32 h-32 {% if job.score >= 85 %}bg-secondary/5{% elif job.score >= 60 %}bg-primary/5{% else %}bg-tertiary/5{% endif %} rounded-bl-full -z-10 group-hover:bg-secondary/5 transition-colors"></div>
+
+    <div class="flex justify-between items-start mb-4">
+      <div class="flex-1 min-w-0 pr-4">
+        <h2 class="font-headline font-bold text-lg text-inverse-surface group-hover:text-secondary transition-colors line-clamp-1">
+          <a href="{{ job.url }}" target="_blank" rel="noopener" class="hover:text-secondary transition-colors">{{ job.title }}</a>
+        </h2>
+        <p class="font-label text-on-surface-variant text-xs mt-1 flex items-center gap-1 flex-wrap">
+          <span class="material-symbols-outlined text-[14px]">business</span> {{ job.company }}
+          {% if job.location %}<span class="mx-1">·</span><span class="material-symbols-outlined text-[14px]">location_on</span> {{ job.location }}{% endif %}
+        </p>
+      </div>
+      <div class="flex flex-col items-end shrink-0">
+        <span class="font-label text-xs {% if job.score >= 85 %}text-secondary{% elif job.score >= 60 %}text-primary{% else %}text-tertiary{% endif %} mb-1 uppercase tracking-wider">Match Score</span>
+        <div class="bg-surface border {% if job.score >= 85 %}border-secondary/50 text-secondary shadow-[0_0_10px_rgba(0,255,204,0.2)] neon-text-secondary{% elif job.score >= 60 %}border-primary/50 text-primary shadow-[0_0_10px_rgba(255,45,120,0.2)] neon-text-primary{% else %}border-tertiary/50 text-tertiary shadow-[0_0_10px_rgba(255,224,74,0.1)]{% endif %} font-display font-bold text-lg px-3 py-1 rounded flex items-center gap-1">
+          {{ job.score }}
+          <span class="material-symbols-outlined text-sm">{% if job.score >= 85 %}bolt{% elif job.score >= 60 %}auto_graph{% else %}warning{% endif %}</span>
+        </div>
+      </div>
+    </div>
+
+    {% if job.score_reason %}
+    <div class="flex-1 mt-2">
+      <div class="flex items-start gap-2 bg-surface-container-low/50 p-3 rounded border border-outline-variant/30">
+        <span class="material-symbols-outlined {% if job.score >= 60 %}text-secondary{% else %}text-tertiary{% endif %} text-sm mt-0.5">psychology</span>
+        <p class="font-body text-sm text-on-surface-variant leading-relaxed line-clamp-3">{{ job.score_reason }}</p>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="mt-6 flex items-center justify-between pt-4 border-t border-outline-variant/30">
+      <div class="font-label text-xs text-on-surface-variant flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">sensors</span>
+        Source: <span class="text-secondary ml-1">{{ job.source }}</span>
+        <span class="mx-2 text-outline-variant">·</span>
+        <span class="text-outline-variant">{{ job.found_at[:10] }}</span>
+      </div>
+      <div class="flex gap-3">
+        <a href="{{ job.url }}" target="_blank" rel="noopener"
+           class="text-on-surface hover:text-secondary font-label text-xs uppercase tracking-wide transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">visibility</span> View
+        </a>
+        <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
+          <button type="submit" class="text-primary hover:text-secondary font-label text-xs uppercase tracking-wide transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">description</span> Resume
+          </button>
+        </form>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
 </div>
 {% endif %}
 
@@ -67,14 +87,11 @@
 async function triggerRun() {
   const token = prompt("Enter run token:");
   if (!token) return;
-  const btn = document.querySelector('[onclick="triggerRun()"]');
+  const btn = document.getElementById("runBtn");
   btn.disabled = true;
-  btn.textContent = "Running…";
+  btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[18px]">refresh</span> Running…';
   try {
-    const res = await fetch("/run", {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + token }
-    });
+    const res = await fetch("/run", { method: "POST", headers: { "Authorization": "Bearer " + token } });
     const data = await res.json();
     if (res.ok) {
       alert(`Done! New jobs: ${data.new_jobs}, sent: ${data.sent}`);
@@ -86,7 +103,7 @@ async function triggerRun() {
     alert("Request failed: " + e.message);
   } finally {
     btn.disabled = false;
-    btn.textContent = "▶ Run Now";
+    btn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1;">play_circle</span> Run Now';
   }
 }
 </script>

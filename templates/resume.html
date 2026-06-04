@@ -2,43 +2,61 @@
 {% block title %}Adapted Resume — HR Partner{% endblock %}
 {% block content %}
 
-<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 border-b border-outline-variant/30 pb-6">
   <div>
-    <h1>Adapted Resume</h1>
-    <p class="muted">{{ job.title }} · {{ job.company }}</p>
+    <h1 class="font-display font-black text-4xl text-on-surface tracking-tight mb-2 flex items-center gap-3">
+      <span class="material-symbols-outlined text-secondary text-4xl neon-text-secondary" style="font-variation-settings:'FILL' 1;">description</span>
+      Adapted Resume
+    </h1>
+    <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest">
+      {{ job.title }} · {{ job.company }}
+    </p>
   </div>
-  <div style="display:flex;gap:8px;">
-    <a href="{{ job.url }}" target="_blank" class="btn btn-secondary">View Job</a>
-    <a href="/" class="btn btn-secondary">← Dashboard</a>
+  <div class="flex gap-3 mt-6 md:mt-0">
+    <a href="{{ job.url }}" target="_blank" rel="noopener"
+       class="flex items-center gap-2 text-on-surface hover:text-secondary font-label text-sm uppercase tracking-wide transition-colors border border-outline-variant/50 px-4 py-2 rounded">
+      <span class="material-symbols-outlined text-[18px]">visibility</span> View Job
+    </a>
+    <a href="/"
+       class="flex items-center gap-2 text-on-surface hover:text-secondary font-label text-sm uppercase tracking-wide transition-colors border border-outline-variant/50 px-4 py-2 rounded">
+      <span class="material-symbols-outlined text-[18px]">arrow_back</span> Dashboard
+    </a>
   </div>
-</div>
+</header>
 
 {% if not resume_md %}
-<div class="card" style="text-align:center;padding:48px;color:#6b7280;">
-  <p>Resume is being generated… Please refresh in a moment.</p>
-  <a href="/jobs/{{ job.job_id }}/resume" class="btn btn-primary" style="margin-top:12px;">Refresh</a>
+<div class="glass-card rounded-xl p-16 text-center">
+  <span class="material-symbols-outlined text-5xl text-on-surface-variant mb-4 block animate-pulse">hourglass_empty</span>
+  <p class="font-label text-on-surface-variant text-sm uppercase tracking-widest mb-6">Generating resume…</p>
+  <a href="/jobs/{{ job.job_id }}/resume"
+     class="inline-flex items-center gap-2 bg-surface text-primary font-headline font-bold uppercase tracking-wider text-sm px-6 py-3 rounded border border-primary/50 neon-button">
+    <span class="material-symbols-outlined text-[18px]">refresh</span> Refresh
+  </a>
 </div>
 {% else %}
-<div class="card" style="position:relative;">
-  <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:16px;">
-    <button onclick="copyResume()" class="btn btn-secondary btn-sm">📋 Copy Markdown</button>
-    <a href="/jobs/{{ job.job_id }}/resume/download" class="btn btn-primary btn-sm">⬇ Download DOCX</a>
+<div class="glass-card rounded-xl p-6">
+  <div class="flex justify-end gap-3 mb-6">
+    <button onclick="copyResume()"
+      class="flex items-center gap-2 text-on-surface hover:text-secondary font-label text-xs uppercase tracking-wide transition-colors border border-outline-variant/50 px-4 py-2 rounded" id="copyBtn">
+      <span class="material-symbols-outlined text-[16px]">content_copy</span> Copy Markdown
+    </button>
+    <a href="/jobs/{{ job.job_id }}/resume/download"
+      class="flex items-center gap-2 text-secondary hover:text-on-surface font-label text-xs uppercase tracking-wide transition-colors border border-secondary/40 px-4 py-2 rounded">
+      <span class="material-symbols-outlined text-[16px]">download</span> Download DOCX
+    </a>
     <form method="post" action="/jobs/{{ job.job_id }}/prepare-resume" style="display:inline;">
-      <button type="submit" class="btn btn-green btn-sm">↻ Regenerate</button>
+      <button type="submit"
+        class="flex items-center gap-2 text-primary hover:text-secondary font-label text-xs uppercase tracking-wide transition-colors border border-primary/40 px-4 py-2 rounded">
+        <span class="material-symbols-outlined text-[16px]">refresh</span> Regenerate
+      </button>
     </form>
   </div>
 
-  <!-- Rendered preview -->
-  <div id="resumePreview" style="display:none;">
-    <!-- markdown rendered here via JS -->
-  </div>
-
-  <!-- Raw markdown in textarea -->
   <textarea id="resumeRaw" rows="40"
-    style="font-family:'Courier New',monospace;font-size:13px;line-height:1.6;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:16px;resize:vertical;">{{ resume_md }}</textarea>
+    style="font-family:'Space Grotesk',monospace;font-size:13px;line-height:1.6;resize:vertical;min-height:500px;">{{ resume_md }}</textarea>
 
-  <p style="margin-top:8px;font-size:12px;color:#9ca3af;">
-    Markdown format — paste directly into Google Docs, Notion, or any Markdown editor.
+  <p class="mt-3 font-label text-xs text-on-surface-variant">
+    Markdown format — paste into Google Docs, Notion, or any Markdown editor.
   </p>
 </div>
 {% endif %}
@@ -46,10 +64,14 @@
 <script>
 function copyResume() {
   const ta = document.getElementById("resumeRaw");
+  const btn = document.getElementById("copyBtn");
   navigator.clipboard.writeText(ta.value).then(() => {
-    const btn = event.target;
-    btn.textContent = "✓ Copied!";
-    setTimeout(() => btn.textContent = "📋 Copy Markdown", 2000);
+    btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">check</span> Copied!';
+    btn.classList.add("text-secondary");
+    setTimeout(() => {
+      btn.innerHTML = '<span class="material-symbols-outlined text-[16px]">content_copy</span> Copy Markdown';
+      btn.classList.remove("text-secondary");
+    }, 2000);
   });
 }
 </script>
