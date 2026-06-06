@@ -8,13 +8,12 @@ def _make_job_id(title: str, company: str, url: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
-def search_jobs(query: str) -> list[dict]:
+def search_jobs(query: str, location: str = "") -> list[dict]:
     client = serpapi.Client(api_key=settings.serpapi_key)
-    results = client.search(
-        engine="google_jobs",
-        q=query,
-        hl="en",
-    )
+    params = {"engine": "google_jobs", "q": query, "hl": "en"}
+    if location:
+        params["location"] = location
+    results = client.search(**params)
     jobs_results = results.get("jobs_results", [])
 
     jobs = []
@@ -50,24 +49,27 @@ def search_jobs(query: str) -> list[dict]:
             "description": description[:3000],
             "url": url,
             "source": source,
-            "query": query,
+            "query": f"{query} [{params.get('location', 'global')}]" if location else query,
         })
 
     return jobs
 
 
-def search_all_queries(queries: list[str]) -> list[dict]:
+def search_all_queries(queries: list[dict]) -> list[dict]:
     all_jobs: list[dict] = []
     seen_ids: set[str] = set()
 
-    for query in queries:
+    for q in queries:
+        query = q["query"]
+        location = q.get("location", "")
         try:
-            jobs = search_jobs(query)
+            jobs = search_jobs(query, location)
             for job in jobs:
                 if job["job_id"] not in seen_ids:
                     seen_ids.add(job["job_id"])
                     all_jobs.append(job)
         except Exception as e:
-            print(f"[search] Error for query '{query}': {e}")
+            loc_info = f" [{location}]" if location else ""
+            print(f"[search] Error for query '{query}'{loc_info}: {e}")
 
     return all_jobs

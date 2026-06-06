@@ -12,7 +12,8 @@ async def run_pipeline() -> dict:
         print("[pipeline] No active queries found")
         return {"status": "no_queries", "new_jobs": 0, "sent": 0}
 
-    print(f"[pipeline] Searching with {len(queries)} queries: {queries}")
+    query_labels = [f"{q['query']}{'['+q['location']+']' if q.get('location') else ''}" for q in queries]
+    print(f"[pipeline] Searching with {len(queries)} queries: {query_labels}")
 
     # Step 2: Fetch jobs from SerpAPI (sync, run in thread pool)
     loop = asyncio.get_event_loop()

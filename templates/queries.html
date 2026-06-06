@@ -25,8 +25,9 @@
     <span class="material-symbols-outlined text-primary text-xl">add_circle</span>
     Add Query
   </h2>
-  <form method="post" action="/queries/add" class="flex gap-3">
-    <input type="text" name="query" placeholder="e.g. OneStream Lead Architect remote" required class="flex-1">
+  <form method="post" action="/queries/add" class="flex flex-col sm:flex-row gap-3">
+    <input type="text" name="query" placeholder="e.g. OneStream Lead Architect" required class="flex-1">
+    <input type="text" name="location" placeholder="Location (e.g. Netherlands) — empty = global" class="flex-1">
     <button type="submit" class="flex items-center gap-2 bg-surface text-primary font-headline font-bold uppercase tracking-wider text-sm px-6 py-2 rounded border border-primary/50 neon-button shrink-0">
       <span class="material-symbols-outlined text-[18px]">add</span> Add
     </button>
@@ -44,8 +45,9 @@
   <div class="divide-y divide-outline-variant/30">
     {% for q in queries %}
     <div class="p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-      <form method="post" action="/queries/{{ q.id }}/update" id="form-{{ q.id }}" class="flex flex-1 items-center gap-3">
-        <input type="text" name="query" value="{{ q.query }}" class="flex-1">
+      <form method="post" action="/queries/{{ q.id }}/update" id="form-{{ q.id }}" class="flex flex-1 items-center gap-3 flex-wrap">
+        <input type="text" name="query" value="{{ q.query }}" class="flex-1 min-w-[200px]">
+        <input type="text" name="location" value="{{ q.location or '' }}" placeholder="Location (empty = global)" class="w-48">
         <label class="flex items-center gap-2 font-label text-sm text-on-surface-variant cursor-pointer shrink-0">
           <input type="checkbox" name="active" value="on" {% if q.active %}checked{% endif %}>
           <span>Active</span>

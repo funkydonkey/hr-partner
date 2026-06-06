@@ -7,10 +7,14 @@ from app.config import settings
 DB_PATH = settings.database_path
 
 DEFAULT_QUERIES = [
-    {"query": "OneStream Lead Architect", "active": True},
-    {"query": "OneStream Solution Architect", "active": True},
-    {"query": "OneStream Developer Consultant", "active": True},
-    {"query": "EPM CPM Architect OneStream", "active": True},
+    {"query": "OneStream Lead Architect", "active": True, "location": ""},
+    {"query": "OneStream Solution Architect", "active": True, "location": ""},
+    {"query": "OneStream Developer Consultant", "active": True, "location": ""},
+    {"query": "EPM CPM Architect OneStream", "active": True, "location": ""},
+    {"query": "OneStream Architect", "active": True, "location": "United Kingdom"},
+    {"query": "OneStream Solution Architect", "active": True, "location": "Netherlands"},
+    {"query": "OneStream Lead Architect", "active": True, "location": "Germany"},
+    {"query": "EPM Architect OneStream remote", "active": True, "location": "France"},
 ]
 
 
@@ -36,9 +40,15 @@ async def init_db():
             CREATE TABLE IF NOT EXISTS search_queries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 query TEXT NOT NULL,
-                active INTEGER NOT NULL DEFAULT 1
+                active INTEGER NOT NULL DEFAULT 1,
+                location TEXT NOT NULL DEFAULT ''
             )
         """)
+        # Migration: add location column to existing DBs
+        try:
+            await db.execute("ALTER TABLE search_queries ADD COLUMN location TEXT NOT NULL DEFAULT ''")
+        except Exception:
+            pass  # column already exists
         await db.execute("""
             CREATE TABLE IF NOT EXISTS adapted_resumes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,8 +64,8 @@ async def init_db():
         if row[0] == 0:
             for q in DEFAULT_QUERIES:
                 await db.execute(
-                    "INSERT INTO search_queries (query, active) VALUES (?, ?)",
-                    (q["query"], 1 if q["active"] else 0),
+                    "INSERT INTO search_queries (query, active, location) VALUES (?, ?, ?)",
+                    (q["query"], 1 if q["active"] else 0, q.get("location", "")),
                 )
         await db.commit()
 
@@ -119,29 +129,31 @@ async def get_queries() -> list[dict]:
         return [dict(row) for row in rows]
 
 
-async def get_active_queries() -> list[str]:
+async def get_active_queries() -> list[dict]:
     async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
         cursor = await db.execute(
-            "SELECT query FROM search_queries WHERE active = 1"
+            "SELECT query, location FROM search_queries WHERE active = 1"
         )
         rows = await cursor.fetchall()
-        return [row[0] for row in rows]
+        return [{"query": row["query"], "location": row["location"] or ""} for row in rows]
 
 
-async def add_query(query: str) -> dict:
+async def add_query(query: str, location: str = "") -> dict:
     async with aiosqlite.connect(DB_PATH) as db:
         cursor = await db.execute(
-            "INSERT INTO search_queries (query, active) VALUES (?, 1)", (query,)
+            "INSERT INTO search_queries (query, active, location) VALUES (?, 1, ?)",
+            (query, location),
         )
         await db.commit()
-        return {"id": cursor.lastrowid, "query": query, "active": 1}
+        return {"id": cursor.lastrowid, "query": query, "active": 1, "location": location}
 
 
-async def update_query(query_id: int, query: str, active: bool) -> bool:
+async def update_query(query_id: int, query: str, active: bool, location: str = "") -> bool:
     async with aiosqlite.connect(DB_PATH) as db:
         cursor = await db.execute(
-            "UPDATE search_queries SET query = ?, active = ? WHERE id = ?",
-            (query, 1 if active else 0, query_id),
+            "UPDATE search_queries SET query = ?, active = ?, location = ? WHERE id = ?",
+            (query, 1 if active else 0, location, query_id),
         )
         await db.commit()
         return cursor.rowcount > 0

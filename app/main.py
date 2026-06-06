@@ -66,11 +66,14 @@ async def queries_page(request: Request, saved: Optional[str] = None):
 
 
 @app.post("/queries/add")
-async def add_query(query: Annotated[str, Form()]):
+async def add_query(
+    query: Annotated[str, Form()],
+    location: Annotated[Optional[str], Form()] = None,
+):
     query = query.strip()
     if not query:
         raise HTTPException(status_code=400, detail="Query cannot be empty")
-    await storage.add_query(query)
+    await storage.add_query(query, (location or "").strip())
     return RedirectResponse("/queries?saved=1", status_code=303)
 
 
@@ -79,8 +82,9 @@ async def update_query(
     query_id: int,
     query: Annotated[str, Form()],
     active: Annotated[Optional[str], Form()] = None,
+    location: Annotated[Optional[str], Form()] = None,
 ):
-    await storage.update_query(query_id, query.strip(), active == "on")
+    await storage.update_query(query_id, query.strip(), active == "on", (location or "").strip())
     return RedirectResponse("/queries?saved=1", status_code=303)
 
 
