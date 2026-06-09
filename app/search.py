@@ -8,11 +8,35 @@ def _make_job_id(title: str, company: str, url: str) -> str:
     return hashlib.sha256(raw.encode()).hexdigest()[:16]
 
 
+_LOCATION_GL = {
+    "united kingdom": "gb", "uk": "gb", "england": "gb",
+    "germany": "de", "deutschland": "de",
+    "netherlands": "nl", "holland": "nl",
+    "france": "fr",
+    "belgium": "be",
+    "switzerland": "ch",
+    "austria": "at",
+    "sweden": "se",
+    "denmark": "dk",
+    "norway": "no",
+    "poland": "pl",
+    "spain": "es",
+    "italy": "it",
+    "ireland": "ie",
+    "portugal": "pt",
+    "czech republic": "cz",
+    "europe": "gb",  # use google.co.uk as EU proxy
+}
+
+
 def search_jobs(query: str, location: str = "") -> list[dict]:
     client = serpapi.Client(api_key=settings.serpapi_key)
     params = {"engine": "google_jobs", "q": query, "hl": "en"}
     if location:
         params["location"] = location
+        gl = _LOCATION_GL.get(location.lower())
+        if gl:
+            params["gl"] = gl
     results = client.search(**params)
     jobs_results = results.get("jobs_results", [])
 

@@ -67,6 +67,19 @@ async def init_db():
                     "INSERT INTO search_queries (query, active, location) VALUES (?, ?, ?)",
                     (q["query"], 1 if q["active"] else 0, q.get("location", "")),
                 )
+        else:
+            # Upsert EU location queries that may be missing from existing DBs
+            eu_queries = [q for q in DEFAULT_QUERIES if q.get("location")]
+            for q in eu_queries:
+                cursor = await db.execute(
+                    "SELECT id FROM search_queries WHERE query = ? AND location = ?",
+                    (q["query"], q["location"]),
+                )
+                if not await cursor.fetchone():
+                    await db.execute(
+                        "INSERT INTO search_queries (query, active, location) VALUES (?, ?, ?)",
+                        (q["query"], 1, q["location"]),
+                    )
         await db.commit()
 
 
